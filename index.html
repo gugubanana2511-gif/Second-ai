@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>英語リーディング学習アプリ | 和訳 & 読み上げトレーナー</title>
+<link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <header class="app-header">
+    <h1>📖 English Reading Trainer</h1>
+    <p class="subtitle">英文を入力すると、日本語訳と読み上げで学習できるアプリ</p>
+  </header>
+
+  <main class="container">
+
+    <!-- 入力エリア -->
+    <section class="card">
+      <div class="card-head">
+        <label for="englishInput">1. 英文を入力</label>
+        <span id="charCount" class="muted">0 文字</span>
+      </div>
+      <textarea id="englishInput" rows="6" placeholder="ここに英語の文章を入力してください。例）Practice makes perfect. The more you read aloud, the more natural your English will sound."></textarea>
+
+      <div class="input-actions">
+        <button id="translateBtn" class="btn btn-primary">🔤 翻訳する</button>
+        <button id="sampleBtn" class="btn btn-ghost">例文を入れる</button>
+        <button id="clearBtn" class="btn btn-ghost">クリア</button>
+        <span class="hint">Ctrl (⌘) + Enter でも翻訳できます</span>
+      </div>
+    </section>
+
+    <!-- 読み上げコントロール -->
+    <section class="card">
+      <div class="card-head"><label>2. 読み上げ設定</label></div>
+
+      <div class="controls-grid">
+        <div class="control">
+          <label for="accentSelect">アクセント（発音）</label>
+          <select id="accentSelect"></select>
+        </div>
+
+        <div class="control">
+          <label for="voiceSelect">音声（ボイス）</label>
+          <select id="voiceSelect"></select>
+        </div>
+
+        <div class="control">
+          <label for="rateRange">速度: <span id="rateValue">1.0x</span></label>
+          <input type="range" id="rateRange" min="0.5" max="1.75" step="0.05" value="1" />
+          <div class="preset-row">
+            <button class="chip" data-rate="0.6">超ゆっくり</button>
+            <button class="chip" data-rate="0.8">ゆっくり</button>
+            <button class="chip" data-rate="1">標準</button>
+            <button class="chip" data-rate="1.25">速め</button>
+          </div>
+        </div>
+
+        <div class="control">
+          <label for="pitchRange">音の高さ: <span id="pitchValue">1.0</span></label>
+          <input type="range" id="pitchRange" min="0.5" max="1.5" step="0.05" value="1" />
+        </div>
+      </div>
+
+      <div class="playback-row">
+        <button id="playBtn" class="btn btn-primary">▶ 全文を再生</button>
+        <button id="pauseBtn" class="btn btn-ghost" disabled>⏸ 一時停止</button>
+        <button id="stopBtn" class="btn btn-ghost" disabled>⏹ 停止</button>
+        <label class="checkbox-inline">
+          <input type="checkbox" id="loopToggle" />
+          🔁 リピート再生（シャドーイング用）
+        </label>
+      </div>
+
+      <div id="speechWarning" class="warning hidden">
+        ⚠️ お使いのブラウザは音声読み上げ (Web Speech API) に対応していない可能性があります。Chrome または Edge の利用をおすすめします。
+      </div>
+
+      <div id="textDisplay" class="text-display" aria-live="polite"></div>
+    </section>
+
+    <!-- 翻訳結果 -->
+    <section class="card">
+      <div class="card-head">
+        <label>3. 日本語訳（全文）</label>
+        <button id="saveFullBtn" class="btn btn-ghost btn-sm">💾 全文を保存</button>
+      </div>
+      <div id="translationOutput" class="translation-output">ここに日本語訳が表示されます。</div>
+    </section>
+
+    <!-- 文ごとの分解表示 -->
+    <section class="card">
+      <div class="card-head">
+        <label>4. 一文ずつ学習（シャドーイングにおすすめ）</label>
+      </div>
+      <ul id="sentenceList" class="sentence-list">
+        <li class="muted small">翻訳すると、ここに文ごとのリストが表示されます。</li>
+      </ul>
+    </section>
+
+    <!-- マイフレーズ -->
+    <section class="card">
+      <div class="card-head">
+        <label>5. マイフレーズ帳（復習用に保存）</label>
+        <button id="clearHistoryBtn" class="btn btn-ghost btn-sm">全て削除</button>
+      </div>
+      <ul id="historyList" class="sentence-list">
+        <li class="muted small">保存したフレーズはここに表示されます。</li>
+      </ul>
+    </section>
+
+    <!-- 学習のヒント -->
+    <section class="card tips-card">
+      <details>
+        <summary>💡 効果的な学習のヒント</summary>
+        <ul class="tips-list">
+          <li><strong>シャドーイング:</strong> 音声を聞きながら、同時に声に出して真似して発音してみましょう。まずは「ゆっくり」速度から始めるのがおすすめです。</li>
+          <li><strong>US / UK 比較:</strong> 同じ文章をアメリカ英語とイギリス英語の両方で聞き比べて、発音の違いに慣れましょう。</li>
+          <li><strong>一文ずつ再生:</strong> 長い文章は一文ずつ再生すると、意味と発音がリンクしやすくなります。</li>
+          <li><strong>リピート再生:</strong> 同じ文を繰り返し再生し、聞き取れるまで練習しましょう。</li>
+          <li><strong>マイフレーズ帳:</strong> 覚えたい表現は保存しておき、通勤・通学中などに繰り返し復習しましょう。</li>
+        </ul>
+      </details>
+    </section>
+
+  </main>
+
+  <footer class="app-footer">
+    <p>翻訳には Google 翻訳の簡易APIを利用しています（非公式・参考程度にご利用ください）。読み上げは端末（ブラウザ）の音声合成機能を使用します。</p>
+  </footer>
+
+<script src="js/app.js"></script>
+</body>
+</html>
